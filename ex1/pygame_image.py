@@ -4,7 +4,6 @@ import pygame as pg
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-
 def main():
     pg.display.set_caption("はばたけ！こうかとん")
     screen = pg.display.set_mode((800, 600))
@@ -16,29 +15,34 @@ def main():
     kk_rct = kk_img.get_rect()  # 練習10-1：こうかとんRectの取得
     kk_rct.center = 300, 200  # 練習10-2：こうかとんRectに中心座標を設定
     tmr = 0
+    bs = 1
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: return
 
         key_lst = pg.key.get_pressed()  # 練習10-3：すべてのキーの押下状態の取得        
-        key_lst = pg.key.get_pressed()  # キー入力の状態を取得
         dx, dy = 0, 0
-        bs = 2  # 背景スクロール速度
 
-        # ① 何もキーを押していない場合 → 左へ流れる
         if not (key_lst[pg.K_UP] or key_lst[pg.K_DOWN] or key_lst[pg.K_LEFT] or key_lst[pg.K_RIGHT]):
-            kk_rct.move_ip(-1, 0)  # 左へ移動
-        # print(key_lst)
-        if key_lst[pg.K_UP]: 
-            kk_rct.move_ip(-1, -1)  
-        if key_lst[pg.K_DOWN]:  
-            kk_rct.move_ip(-1, +1)  
-        if key_lst[pg.K_LEFT]:
-            kk_rct.move_ip(-1, 0)
-        if key_lst[pg.K_RIGHT]:
-            kk_rct.move_ip(+1, 0)
+            dx = -bs
 
-        x = tmr%3200
+        if key_lst[pg.K_UP] and not key_lst[pg.K_RIGHT]:
+            dx = -bs
+            dy = -bs
+
+        if key_lst[pg.K_DOWN] and not key_lst[pg.K_RIGHT]:
+            dx = -bs
+            dy = bs
+
+        if key_lst[pg.K_LEFT]:
+            dx = -bs
+
+        if key_lst[pg.K_RIGHT]:
+            dx = bs
+
+        kk_rct.move_ip(dx, dy)
+
+        x = tmr % 3200
         screen.blit(bg_img, [-x, 0])  # 練習5：背景画像を右から左へ
         screen.blit(bg_img2, [-x+1600, 0])  # 練習7：2枚目Surface
         screen.blit(bg_img, [-x+3200, 0])  # 練習9：3枚目の背景画像の描画
@@ -46,7 +50,6 @@ def main():
         pg.display.update()
         tmr += 1        
         clock.tick(200)
-
 
 if __name__ == "__main__":
     pg.init()
