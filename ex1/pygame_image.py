@@ -13,11 +13,24 @@ def main():
     bg_img_flipped = pg.transform.flip(bg_img, True, False)#練8
     kk_img = pg.image.load("fig/3.png")#練3
     kk_img = pg.transform.flip(kk_img, True, False)
+    kk_rect = kk_img.get_rect()#練10-1
+    kk_rect.center = (300, 200)#練10-2
     tmr = 0
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: return
 
+        key_list = pg.key.get_pressed()#練10-3
+        if key_list[pg.K_UP]:
+            kk_rect.move_ip(0, -1)
+        if key_list[pg.K_DOWN]:
+            kk_rect.move_ip(0, +1)
+        if key_list[pg.K_LEFT]:
+            kk_rect.move_ip(-1, 0)
+        if key_list[pg.K_RIGHT]:
+            kk_rect.move_ip(+1, 0)
+        screen.blit(kk_img, kk_rect)
+        x = tmr #練5
         x = x % 3200
         screen.blit(bg_img, [-x, 0])
         screen.blit(bg_img, [-x+1600, 0])#練7
